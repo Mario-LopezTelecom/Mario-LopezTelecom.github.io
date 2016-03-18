@@ -4,7 +4,7 @@
  <title>Dr. Mario</title>
  <link href="/atom.xml" rel="self"/>
  <link href="/"/>
- <updated>2016-03-06T01:01:37+00:00</updated>
+ <updated>2016-03-18T21:15:32+00:00</updated>
  <id></id>
  <author>
    <name>Mario López Martínez</name>
@@ -13,63 +13,55 @@
 
  
  <entry>
-   <title>Introducing Hyde</title>
-   <link href="/2013/12/28/introducing-hyde/"/>
-   <updated>2013-12-28T00:00:00+00:00</updated>
-   <id>/2013/12/28/introducing-hyde</id>
-   <content type="html">&lt;p&gt;Hyde is a brazen two-column &lt;a href=&quot;http://jekyllrb.com&quot;&gt;Jekyll&lt;/a&gt; theme that pairs a prominent sidebar with uncomplicated content. It&amp;#39;s based on &lt;a href=&quot;http://getpoole.com&quot;&gt;Poole&lt;/a&gt;, the Jekyll butler.&lt;/p&gt;
+   <title>Acho, ¿qué has estado haciendo estos últimos tres años?</title>
+   <link href="/2016/03/14/acho-que-has-estado-haciendo/"/>
+   <updated>2016-03-14T00:00:00+00:00</updated>
+   <id>/2016/03/14/acho-que-has-estado-haciendo</id>
+   <content type="html">&lt;p&gt;&lt;em&gt;Nota: este post lo publiqué originalmente en Medium, el 19/03/2015. No podía comenzar este blog de otra manera.&lt;/em&gt;&lt;/p&gt;
 
-&lt;h3&gt;Built on Poole&lt;/h3&gt;
+&lt;p&gt;Como se habrá enterado hasta mi (esquizofrénica, esquizofrénica, esquizofrénica) vecina de abajo, AL FIN he depositado la tesis. &lt;/p&gt;
 
-&lt;p&gt;Poole is the Jekyll Butler, serving as an upstanding and effective foundation for Jekyll themes by &lt;a href=&quot;https://twitter.com/mdo&quot;&gt;@mdo&lt;/a&gt;. Poole, and every theme built on it (like Hyde here) includes the following:&lt;/p&gt;
+&lt;!--more--&gt;
 
-&lt;ul&gt;
-&lt;li&gt;Complete Jekyll setup included (layouts, config, &lt;a href=&quot;/404&quot;&gt;404&lt;/a&gt;, &lt;a href=&quot;/atom.xml&quot;&gt;RSS feed&lt;/a&gt;, posts, and &lt;a href=&quot;/about&quot;&gt;example page&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Mobile friendly design and development&lt;/li&gt;
-&lt;li&gt;Easily scalable text and component sizing with &lt;code&gt;rem&lt;/code&gt; units in the CSS&lt;/li&gt;
-&lt;li&gt;Support for a wide gamut of HTML elements&lt;/li&gt;
-&lt;li&gt;Related posts (time-based, because Jekyll) below each post&lt;/li&gt;
-&lt;li&gt;Syntax highlighting, courtesy Pygments (the Python-based code snippet highlighter)&lt;/li&gt;
-&lt;/ul&gt;
+&lt;p&gt;Empecé a escribir este post mientras escribía las conclusiones. Ese es un momento muy &lt;a href=&quot;https://www.youtube.com/watch?v=HrkfXWPk_vo&quot;&gt;Homer Simpson mezclando estimulantes y somníferos&lt;/a&gt;: por un lado estás en el punto más bajonero posible por el cansancio, y por otro, es un parraque máximo porque ahí va lo verdaderamente valioso de tu tesis. Te toca mojarte y dejar algo de tí, de la intuición que tienes después de estar batiéndote el cobre con la literatura y la matemática del tema.&lt;/p&gt;
 
-&lt;h3&gt;Hyde features&lt;/h3&gt;
+&lt;p&gt;El caso es que me daba muchísima pena porque ahí no podía poner algo que me hubiera encantado leer en las tesis de los demás: &lt;em&gt;pero zagalico, ¿por qué has hecho esta paranoia? ¿Con qué te has quedado por el camino? ¿Estás contentico?&lt;/em&gt; (feat. @Sirocoma).&lt;/p&gt;
 
-&lt;p&gt;In addition to the features of Poole, Hyde adds the following:&lt;/p&gt;
+&lt;h3&gt;Llámame Doctor Mario porque…&lt;/h3&gt;
 
-&lt;ul&gt;
-&lt;li&gt;Sidebar includes support for textual modules and a dynamically generated navigation with active link support&lt;/li&gt;
-&lt;li&gt;Two orientations for content and sidebar, default (left sidebar) and &lt;a href=&quot;https://github.com/poole/lanyon#reverse-layout&quot;&gt;reverse&lt;/a&gt; (right sidebar), available via &lt;code&gt;&amp;lt;body&amp;gt;&lt;/code&gt; classes&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/poole/hyde#themes&quot;&gt;Eight optional color schemes&lt;/a&gt;, available via &lt;code&gt;&amp;lt;body&amp;gt;&lt;/code&gt; classes&lt;/li&gt;
-&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&quot;/pics/2016-03-14/traffic.png&quot; alt=&quot;&quot;&gt;
+&lt;div class=&quot;my-caption&quot;&gt; Subfigura A. El tráfico wireless que generábamos con el Teletrébol de Telecinco. Subfigura B. Tráfico generado por una reunión de amiguis cualquiera con Instagram. &lt;/div&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;https://github.com/poole/hyde#readme&quot;&gt;Head to the readme&lt;/a&gt; to learn more.&lt;/p&gt;
+&lt;p&gt;…he hecho cosicas para que podamos ver vídeos de perretes más rápido cuando estamos fuera de casa. El título de mi tesis es “Coexistence Policies in Cognitive Radio” (¿te la quieres leer? &lt;a href=&quot;https://www.dropbox.com/s/wrdpo1sh37kwldg/MLopez_thesis.pdf?dl=0&quot;&gt;HERE&lt;/a&gt;). Resumen rápido: imaginad que las comunicaciones inalámbricas son vehículos en una autopista, con carriles reservados para cada servicio: uno para taxis (en la analogía, por ejemplo, televisión), otro para &lt;a href=&quot;http://www.circulaseguro.com/que-es-un-carril-vao/&quot; rel=&quot;nofollow&quot; data-href=&quot;http://www.circulaseguro.com/que-es-un-carril-vao/&quot;&gt;Vehículos de Alta Ocupación (VAO)&lt;/a&gt; (e.g. móviles), etc. Al principio viajaba poca gente, con lo que había carriles de autopista de sobra (Subfigura A). Pero en esta equivalencia, Youtube en el móvil sería un camión que necesita 3 carriles pa’ el sólo (Subfigura B). No podemos reservar tantos carriles porque la autopista no tiene tantos. Además, algunos de estos carriles se siguen usando de uvas a peras, pero se usan. ¿Por qué no dejar al camionazo-youtube que vaya cambiando de carriles (y/o a los demás vehículos), colocándose en los que pueda, siempre que estén libres, sin chocar con los vehículos reservados para cada carril? Pero claro, no íbamos a estar nosotros conduciendo el camión manualmente (imaginaos tener que ir cambiando un dial de radio para ir recibiendo los datos, según nos vamos moviendo). Yo he investigado qué mecanismos pueden usarse para que el camión circule sin chocar por esa carretera, sin conductor, de manera inteligente.&lt;/p&gt;
 
-&lt;h3&gt;Browser support&lt;/h3&gt;
+&lt;h3&gt;¿Por qué te dio esta paranoia?&lt;/h3&gt;
 
-&lt;p&gt;Hyde is by preference a forward-thinking project. In addition to the latest versions of Chrome, Safari (mobile and desktop), and Firefox, it is only compatible with Internet Explorer 9 and above.&lt;/p&gt;
+&lt;p&gt;Me encantaría marcarme un pegote &amp;quot;a lo gurú iluminado&amp;quot; y decir que desde que tenía 4 años ya &amp;quot;soñaba con aplicar inteligencia artificial al acceso dinámico al espectro radioeléctrico” #NOT. Como Ed Catmull, el presi de Pixar, que te suelta en su libro &lt;a href=&quot;http://www.amazon.es/Creatividad-S-llevar-inspiraci%C3%B3n-infinito-ebook/dp/B00KYZ7GB2/ref=sr_1_1?ie=UTF8&amp;amp;qid=1424821214&amp;amp;sr=8-1&amp;amp;keywords=creatividad&quot; rel=&quot;nofollow&quot; data-href=&quot;http://www.amazon.es/Creatividad-S-llevar-inspiraci%C3%B3n-infinito-ebook/dp/B00KYZ7GB2/ref=sr_1_1?ie=UTF8&amp;amp;qid=1424821214&amp;amp;sr=8-1&amp;amp;keywords=creatividad&quot;&gt;Creatividad S.A&lt;/a&gt; que &lt;strong&gt;EN EL INSTITUTO&lt;/strong&gt; &lt;em&gt;me impuse el objetivo de hacer sin prisas la primera película de animación por ordenador y trabajé sin descanso durante veinte años para lograrlo&lt;/em&gt;. No es el único que hace gala de semejante concentración en un objetivo, también &lt;a href=&quot;http://www.amazon.es/Masters-Doom-Created-Transformed-Culture-ebook/dp/B000FBFNL0/ref=sr_1_1?ie=UTF8&amp;amp;qid=1424821258&amp;amp;sr=8-1&amp;amp;keywords=masters+of+doom&quot; rel=&quot;nofollow&quot; data-href=&quot;http://www.amazon.es/Masters-Doom-Created-Transformed-Culture-ebook/dp/B000FBFNL0/ref=sr_1_1?ie=UTF8&amp;amp;qid=1424821258&amp;amp;sr=8-1&amp;amp;keywords=masters+of+doom&quot;&gt;John Carmack y John Romero&lt;/a&gt; (los creadores de Doom), &lt;a href=&quot;http://www.amazon.es/Masters-Doom-Created-Transformed-Culture-ebook/dp/B000FBFNL0/ref=sr_1_1?ie=UTF8&amp;amp;qid=1424821258&amp;amp;sr=8-1&amp;amp;keywords=masters+of+doom&quot; rel=&quot;nofollow&quot; data-href=&quot;http://www.amazon.es/Masters-Doom-Created-Transformed-Culture-ebook/dp/B000FBFNL0/ref=sr_1_1?ie=UTF8&amp;amp;qid=1424821258&amp;amp;sr=8-1&amp;amp;keywords=masters+of+doom&quot;&gt;el tito Amancio (Ortega&lt;/a&gt;)... Menos mal que luego  Malcom Gladwell en “&lt;a href=&quot;http://www.amazon.com/Outliers-Story-Success-Malcolm-Gladwell/dp/0316017930/ref=sr_1_1?ie=UTF8&amp;amp;qid=1424822155&amp;amp;sr=8-1&amp;amp;keywords=outliers&quot; rel=&quot;nofollow&quot; data-href=&quot;http://www.amazon.com/Outliers-Story-Success-Malcolm-Gladwell/dp/0316017930/ref=sr_1_1?ie=UTF8&amp;amp;qid=1424822155&amp;amp;sr=8-1&amp;amp;keywords=outliers&quot;&gt;Outliers&lt;/a&gt;” te cuenta que la mayoría de estas personas vivieron una serie de circunstancias especiales que codicionaron sus intereses y por tanto, sus objetivos y su éxito. O Mihaly “Never-ending-surname” (que diría mi amigui Iria), que te cuenta en “&lt;a href=&quot;http://www.amazon.com/Creativity-Psychology-Discovery-Mihaly-Csikszentmihalyi/dp/0062283251/ref=sr_1_1?ie=UTF8&amp;amp;qid=1424822451&amp;amp;sr=8-1&amp;amp;keywords=creativity+flow+and+the+psychology+of+discovery+and+invention&quot; rel=&quot;nofollow&quot; data-href=&quot;http://www.amazon.com/Creativity-Psychology-Discovery-Mihaly-Csikszentmihalyi/dp/0062283251/ref=sr_1_1?ie=UTF8&amp;amp;qid=1424822451&amp;amp;sr=8-1&amp;amp;keywords=creativity+flow+and+the+psychology+of+discovery+and+invention&quot;&gt;Creativity: the psychology of discovery and invention&lt;/a&gt;” (capítulo 7, “The Early Years”), como un sesgo cognitivo lleva a estos triunfadores a transformar su historia vital en un todo-conectado con coherencia desde la infancia hasta la actualidad, cuando no ocurrió así.&lt;/p&gt;
 
-&lt;h3&gt;Download&lt;/h3&gt;
+&lt;p&gt;Lo mío fue una pequeña carambola: me gustó bastante hacer el proyecto final de carrera (que fue un pequeño contacto con la investigación), y ante la que se estaba liando con la crisis, imagínate que vienen y te dicen “holi, te aseguro un sueldo durante 4 años, estudiando cosas chulis que más o menos puedes elegir tú, y acabas de doctor, que tienen un 1% de paro”.&lt;/p&gt;
 
-&lt;p&gt;Hyde is developed on and hosted with GitHub. Head to the &lt;a href=&quot;https://github.com/poole/hyde&quot;&gt;GitHub repository&lt;/a&gt; for downloads, bug reports, and features requests.&lt;/p&gt;
+&lt;h3&gt;Entonces, why so serious?&lt;/h3&gt;
 
-&lt;p&gt;Thanks!&lt;/p&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>What's Jekyll?</title>
-   <link href="/2012/02/06/whats-jekyll/"/>
-   <updated>2012-02-06T00:00:00+00:00</updated>
-   <id>/2012/02/06/whats-jekyll</id>
-   <content type="html">&lt;p&gt;&lt;a href=&quot;http://jekyllrb.com&quot;&gt;Jekyll&lt;/a&gt; is a static site generator, an open-source tool for creating simple yet powerful websites of all shapes and sizes. From &lt;a href=&quot;https://github.com/mojombo/jekyll/blob/master/README.markdown&quot;&gt;the project&amp;#39;s readme&lt;/a&gt;:&lt;/p&gt;
+&lt;p&gt;Porque me pegué el hostión del siglo &lt;a href=&quot;https://www.youtube.com/watch?v=nY0SxfCK4Jo&quot;&gt; VÍDEO &lt;/a&gt;&lt;/p&gt;
 
-&lt;blockquote&gt;
-&lt;p&gt;Jekyll is a simple, blog aware, static site generator. It takes a template directory [...] and spits out a complete, static website suitable for serving with Apache or your favorite web server. This is also the engine behind GitHub Pages, which you can use to host your project’s page or blog right here from GitHub.&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p&gt;Hasta llegar al doctorado, prometo que era el típico motivado que pensaba que cualquiera puede conseguir lo que quiera, siempre que lo quiera lo suficiente. Que todo era una cuestión de tiempo y motivación. Esto todavía lo pienso, sólo que ahora tengo súper presente que el tiempo no es infinito y la motivación aún menos.&amp;lt;&lt;/p&gt;
 
-&lt;p&gt;It&amp;#39;s an immensely useful tool and one we encourage you to use here with Hyde.&lt;/p&gt;
+&lt;p&gt;Reconozco que iba hiper-confiado porque siempre he sido muy buen estudiante, con lo que la hostia ha sido doble. Dice Matt Might en su &lt;a href=&quot;http://matt.might.net/articles/successful-phd-students/&quot; rel=&quot;nofollow&quot; data-href=&quot;http://matt.might.net/articles/successful-phd-students/&quot;&gt;blog&lt;/a&gt;: “If you have an ego problem, Ph.D. school will fix it. With a vengeance”. Entonces ni se me pasó por la cabeza lo que supone resolver problemas no acotado. El requisito para publicar un trabajo, y finalmente depositar tu tesis doctoral, es que hagas una contribución original a tu campo, algo que no haya planteado antes nadie y que funcione. Tampoco tenía ni idea de que la tasa de abandono fuera tan bestia (&lt;a href=&quot;http://www.ugr.es/~aepc/articulo/8.pdf&quot; rel=&quot;nofollow&quot; data-href=&quot;http://www.ugr.es/~aepc/articulo/8.pdf&quot;&gt;del 50% entre los que consiguen mi beca&lt;/a&gt;). Otra cosa que tampoco piensas es que, obviamente, quienes se deciden por estudios doctorales (y contra los que pasas a competir) son, necesariamente, buenos estudiantes también.&lt;/p&gt;
 
-&lt;p&gt;Find out more by &lt;a href=&quot;https://github.com/mojombo/jekyll&quot;&gt;visiting the project on GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;h3&gt;Vaya panorama, amiga. Cuéntame algo bonico.&lt;/h3&gt;
+
+&lt;p&gt;Afortunadamente, aparte de atravesar el &lt;a href=&quot;http://thesiswhisperer.com/2012/05/08/the-valley-of-shit/&quot; rel=&quot;nofollow&quot; data-href=&quot;http://thesiswhisperer.com/2012/05/08/the-valley-of-shit/&quot;&gt;valle de la mierda&lt;/a&gt;, como dice The Thesis Whisperer, también puedo decir que ni siquiera soy la misma persona que empezó. Por nombrar algunas cualidades que gané:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;+ Metodología, un cambio a nivel de proceso en el pensamiento. Todo muy sistemático, hacer orden del caos absoluto en poco tiempo, saber qué pasos ir dando para hacerse un pseudo-experto en cualquier cosa, incluso cuando no tienes ni remota idea. Retorcer los modelos y las argumentaciones como si fueran cubos de Rubik hasta que “medio-encajan”.
++ Curiosidad, hasta un punto casi problemático. Va a llegar el día en que me interese TODO. Me falta vida ahora mismo para leer, aprender y probar todo lo que me apetece. Esto es un poco una putada porque parece ser que &amp;lt;a href=&amp;quot;http://lifehacker.com/5927330/the-holy-trinity-of-inactivity-how-boredom-distraction-and-procrastination-are-vital-to-healthy-living&amp;quot; rel=&amp;quot;nofollow&amp;quot; data-href=&amp;quot;http://lifehacker.com/5927330/the-holy-trinity-of-inactivity-how-boredom-distraction-and-procrastination-are-vital-to-healthy-living&amp;quot;&amp;gt;es importante aburrirse de cuando en cuando&amp;lt;/a&amp;gt;.
++ Resiliencia. Llega un cierto punto en que te das cuenta de que las tareas nunca se acaban, que las fechas de entrega nunca son realistas (al menos para la calidad que te gustaría darle a las cosas), que casi nunca encuentras la solución a la primera (ni a la segunda, ni a la tercera…). Es más, hay semanas que aunque has pasado 8–10 horas diarias formulando, probando y leyendo, el progreso es literalmente cero. Por una cuestión de supervivencia, te quedas con un rollete en plan “bueno, pues que venga lo que venga, que aquí estoy yo”.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt; ¿Estás contentico?&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn-images-1.medium.com/max/800/1*yDHHG4naRNcn2CxgxGS9tg.png&quot; alt=&quot;&quot; data-src=&quot;https://cdn-images-1.medium.com/max/800/1*yDHHG4naRNcn2CxgxGS9tg.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Sí, pero a pesar del doctorado, y no gracias a él (así que, en verdad, la respuesta es NO). Aunque me ha reportado habilidades muy importantes a título personal, el coste en angustia por la incertidumbre no lo ha merecido. Por no hablar del coste de oportunidad: quizá hubiera adquirido las mismas aptitudes con otra actividad profesional o simplemente con el tiempo a través de mis hobbies. Lo que es peor, creo que este esfuerzo puesto en otra actividad hubiera reportado mucho más beneficio.&lt;/p&gt;
+
+&lt;p&gt;En resumen, como leí en algún lugar (creo que en &lt;a href=&quot;http://www.amazon.com/PhD-Not-Enough-Survival-Science/dp/0465022227/ref=sr_1_1?ie=UTF8&amp;amp;qid=1426443845&amp;amp;sr=8-1&amp;amp;keywords=a+phd+is+not+enough+a+guide+to+survival+in+science&quot; rel=&quot;nofollow&quot; data-href=&quot;http://www.amazon.com/PhD-Not-Enough-Survival-Science/dp/0465022227/ref=sr_1_1?ie=UTF8&amp;amp;qid=1426443845&amp;amp;sr=8-1&amp;amp;keywords=a+phd+is+not+enough+a+guide+to+survival+in+science&quot;&gt;A PhD is Not Enough: a Guide to Survival in Science&lt;/a&gt;) &lt;em&gt;sé investigador sólo si no eres capaz de ser feliz haciendo cualquier otra cosa”&lt;/em&gt;.&lt;/p&gt;
 </content>
  </entry>
  
