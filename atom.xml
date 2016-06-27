@@ -4,13 +4,260 @@
  <title>Dr. Mario</title>
  <link href="/atom.xml" rel="self"/>
  <link href="/"/>
- <updated>2016-06-03T15:12:18+00:00</updated>
+ <updated>2016-06-27T00:56:24+00:00</updated>
  <id></id>
  <author>
    <name>Mario López Martínez</name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Nutch, HDFS, and Elasticsearch on AWS t2.micro instances (Free Tier)</title>
+   <link href="/2016/07/26/nutch-hdfs-elasticsearch-on-t2micro/"/>
+   <updated>2016-07-26T00:00:00+00:00</updated>
+   <id>/2016/07/26/nutch-hdfs-elasticsearch-on-t2micro</id>
+   <content type="html">&lt;p&gt;As a small exercise I committed to see how far I could go into the following task definition: &lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Configure an HTTP crawler on Amazon AWS (Free Tier) with high performance and index a couple of websites.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt; Use Nutch as crawler.&lt;/li&gt;
+&lt;li&gt; Configure it to use several machines simultaneously for crawling.&lt;/li&gt;
+&lt;li&gt; Configure HDFS as filesystem. &lt;/li&gt;
+&lt;li&gt; Use ElasticSearch for storage and indexing.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;!--more--&gt;
+
+&lt;p&gt;And this is what I got after a week of work and a total of 15 hours:
+&lt;img style=&quot;display:block;margin:auto&quot; src=&quot;/pics/2016-06-26/system_diagram.png&quot; alt=&quot;&quot;/&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt; Three Amazon EC2 t2.micro instances running Hadoop 2.6.4: one as master and two worker nodes.&lt;/li&gt;
+&lt;li&gt; Apache Nutch 1.12 successfully running on top of the Hadoop cluster.&lt;/li&gt;
+&lt;li&gt; An Elasticsearch cluster of two nodes successfully indexing the results of the Nutch crawl (5 shards and 1 replica).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Which we can compare to my initial estimation:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt; &lt;code&gt;[COMPLETED]&lt;/code&gt;. Nutch running on top of a 3-machine Hadoop cluster (85% chance of success).&lt;/li&gt;
+&lt;li&gt; &lt;code&gt;[COMPLETED]&lt;/code&gt;. ElasticSearch integration (65% chance of success).&lt;/li&gt;
+&lt;li&gt; &lt;code&gt;[NOT COMPLETED]&lt;/code&gt;. Small study regarding performance (40% chance of success).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;This means that my final performance got pretty close to the expected results.&lt;/p&gt;
+
+&lt;h1&gt;1. Mini guide and references on how to set-up the system&lt;/h1&gt;
+
+&lt;h3&gt;1.1. Hadoop&lt;/h3&gt;
+
+&lt;p&gt;1) Spin up three t2.micro instances with the following Amazon Machine Image: Amazon Linux AMI 2016.03.2 (HVM), SSD Volume Type - ami-f303fb93. No need to change anything on the default configuration, but keep all three instances within the same Security Group [1].&lt;/p&gt;
+
+&lt;p&gt;2) In addition to the default SSH rule, include the following inbound rules in the Security Group (Type, Protocol, Port Range, Source):&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt; All traffic, All, All, &lt;code&gt;$your_security_group&lt;/code&gt;: this allows the three machines to communicate with each other&lt;/li&gt;
+&lt;li&gt; Custom TCP, TCP, 50700, &lt;code&gt;$ips_for_web_access&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt; Same than above for ports 8088, 19888: these last two rules will allow you to access the web UI of ResourceManager and JobHistory Server to track the state of jobs and nodes (from the computers within `$ips&lt;em&gt;for&lt;/em&gt;web_access).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;3) Download Hadoop 2.6.4 binaries from [3]. Configure it according to the this gist [4]. Helpful resources on this step are [5-7]. Only a few remarks are needed for a configuration on different machines:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt; &lt;code&gt;core_site.xml/fs.defaultFS&lt;/code&gt;. This address is your address of the node that will act as NameNode.&lt;/li&gt;
+&lt;li&gt; &lt;code&gt;slaves&lt;/code&gt;. Change the address in there for the address of your worker nodes.&lt;/li&gt;
+&lt;li&gt; &lt;code&gt;yarn_site.xml/yarn.resourcemanager.hostname&lt;/code&gt;. This is the address of the node that will act as ResourceManager.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;4) Before start using the dfs, we have to format it by running the following in the master node:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$HADOOP_HOME/bin/hdfs namenode -format $cluster_name
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;where &lt;code&gt;$cluster_name&lt;/code&gt; is a name of your choice.&lt;/p&gt;
+
+&lt;p&gt;5) At this point, the hdfs (and YARN) should work. We can start all the required processes in all machines by running on the master node:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$HADOOP_HOME/sbin/start-dfs.sh
+$HADOOP_HOME/sbin/start-yarn.sh
+$HADOOP_HOME/sbin/mr-jobhistory-daemon.sh start historyserver
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;6) We can test that everything when fine by taking the following actions:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt; Running on &lt;code&gt;jps&lt;/code&gt; on the master node and slave nodes, which should display the corresponding processes. You will need to instal java-devel first (`yum install java-devel).&lt;/li&gt;
+&lt;li&gt; We can put any file on the dfs from any node by running:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;hdfs dfs -mkdir /test_dir
+hdfs dfs -put $any_file_in_local_storage /test_dir/$file_name
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And retrieving them in any other node by running &lt;code&gt;hdfs dfs -get /test_dir/$file_name $file_name&lt;/code&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Finally, we are ready to run a the popular WordCount MapReduce example. For example, save a text file &amp;quot;hello_world.txt&amp;quot; with the words &amp;quot;hello world hello Hello&amp;quot;. Then, run these commands:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;hdfs dfs -mkdir /hello_world_in
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;hdfs dfs -put hello_world.txt /helloWorld_input/hello_world.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;hadoop jar $HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.6.4.jar wordcount /hello_world_in /hello_world_out
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;
+hdfs dfs -cat /hello_world_out/part*
+&lt;/code&gt;`&lt;/p&gt;
+
+&lt;p&gt;You should see in stdout:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;Hello    1
+hello    2
+world    1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;1.2. Nutch&lt;/h3&gt;
+
+&lt;p&gt;7) Download Apache Nutch 1.12 source from [14] to your &amp;quot;master&amp;quot; t2.micro instance. Good guides to follow are [15-16], although please note that step 12 is now different than in those resources.&lt;/p&gt;
+
+&lt;p&gt;8) Configure &lt;code&gt;$NUTCH_HOME/conf/nutch-site.xml&lt;/code&gt; according to [4]. At this point, the only mandatory property is &lt;code&gt;http.agent.name&lt;/code&gt;, which can be set to any arbitrary value.&lt;/p&gt;
+
+&lt;p&gt;9) For my example test case, in which I will only crawl this very same webpage, &lt;code&gt;$NUTCH_HOME/conf/regex-urlfilter.txt&lt;/code&gt; also has to be edited with a regular expression matching all pages under &lt;code&gt;http://mario-lopeztelecom.github.io/&lt;/code&gt;. Right below &amp;quot;Accept everything else&amp;quot;, change the existing expression to:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;+^http://mario-lopeztelecom.github.io/.*``
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;10) Copy the following files from the Hadoop configuration to &lt;code&gt;$NUTCH_HOME/conf&lt;/code&gt;: &lt;code&gt;hadoop-env.sh, core-site.xml, hdfs-site.xml, mapred-site.xml, slaves&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;11) Install ant in order to compile Nutch (&lt;code&gt;yum install ant&lt;/code&gt;), and run &lt;code&gt;ant runtime&lt;/code&gt; on &lt;code&gt;$NUTCH_HOME&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;12) To test the crawl (without indexing), create a file &lt;code&gt;seeds.txt&lt;/code&gt;, put in the dfs (&lt;em&gt;e.g.,&lt;/em&gt; in &lt;code&gt;/urls&lt;/code&gt; folder), and then run:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$NUTCH_HOME/runtime/deploy/bin /urls /crawlOutput $rounds
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;where `$rounds is the number of rounds you want the crawler to run for.&lt;/p&gt;
+
+&lt;h3&gt;1.3. Elasticsearch&lt;/h3&gt;
+
+&lt;p&gt;13) Download Elasticsearch 1.4.1 from [17], both on the &amp;quot;master&amp;quot; and &amp;quot;slave1&amp;quot; t2.micro instances.&lt;/p&gt;
+
+&lt;p&gt;14) On &lt;code&gt;$ELASTIC_HOME/config/elasticsearch.yml&lt;/code&gt; @ slave1, made the following changes to be able to form a cluster:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt; Uncomment &lt;code&gt;#cluster.name: elasticsearch&lt;/code&gt;: the slave1 instance of elasticsearch will join the existing cluster &amp;quot;elasticsearch&amp;quot; created by the master node.&lt;/li&gt;
+&lt;li&gt; &lt;code&gt;discovery.zen.ping.multicast.enabled: false&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt; &lt;code&gt;discovery.zen.ping.unicast.hosts: [$address_of_master]&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;15) At this point you should be able to start both instances of elasticsearch (running &lt;code&gt;$ELASTIC_HOME/bin/elasticsearch&lt;/code&gt; first on master, then on slave1) and see in the stdout that they form a cluster. With the standard config we have not touched, each instance should hold a replica of the data we store in elasticsearch. &lt;/p&gt;
+
+&lt;p&gt;16) Create the (intially empty) index for the crawl results [18]. For example, we will create &amp;quot;test_index&amp;quot;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;curl -XPUT &amp;#39;localhost:9200/test_index?pretty&amp;#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;17) If you have not done it already on step 8 (if you did not copied the whole contents of &lt;code&gt;nutch-site.xml&lt;/code&gt; from [4], leaving out the ones related to elasticsearch), now it is the time to do so. These properties are pretty self-explanatory, only note that &lt;code&gt;elastic.host&lt;/code&gt; refers to the address of the master instance of the elasticsearch cluster. Link [19] provides more info on these parameters. Also remember to recompile Nutch after doing these changes.&lt;/p&gt;
+
+&lt;p&gt;18) Finally, we can launch the whole crawl and indexing process with: &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$NUTCH_HOME/bin/crawl -i  /urls /crawlOutput  2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;where the &amp;quot;-i&amp;quot; switch is for indexing on elasticsearch. If you have run the crawl first, and you only want to index the results of a particular segment, use the following command:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$NUTCH_HOME/runtime/deploy/bin/nutch index /crawlOutput//crawldb -linkdb /crawlOutput//linkdb /crawlOutput//segments/$segment
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;19) Test the result. We should be able to see the crawled contents on the elasticsearch index by running: &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;curl &amp;#39;localhost:9200/test_index/_search?q=*&amp;amp;pretty&amp;#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;and you will see something similar to this:
+&lt;img style=&quot;display:block;margin:auto&quot; src=&quot;/pics/2016-06-26/screen.png&quot; alt=&quot;&quot;/&gt;&lt;/p&gt;
+
+&lt;h1&gt;2. Discussion on major difficulties and decisions made.&lt;/h1&gt;
+
+&lt;h3&gt;2.1 Architecture&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;2.1.1. Decision #1. How to split the required Hadoop roles.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;The decision of having a master coordinator-only node instead of three worker nodes where one also holds the master role, came from the intuition that t2.micro instances, with 1GB of RAM, were going to struggle even under moderate workload. The memory issues I had later, as well as this StackOverflow post [8], confirmed this intuition.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;2.1.2. Decision #2. Elasticsearch cluster.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Facing the previously mentioned memory issue, I was not sure on which node will be harmed the most by also holding an Elasticsearch node. Because of that, for experimentation purposes, I decided to spin up an Elasticsearch node both on my &amp;quot;master&amp;quot; t2.micro instance and on one worker node, but not on the other (so that at least one node has a lower workload and a chance to survive a crash.) Ideally, I would have put elasticsearch on a separate t2.micro instance, but that would have got me out of the free tier.&lt;/p&gt;
+
+&lt;h3&gt;2.2. Configuration: memory issues&lt;/h3&gt;
+
+&lt;p&gt;This has been, by far, the most difficult problem to solve. When running the whole crawl and indexing process, I could see lots of failed map tasks in the ApplicationTracker. In fact, many times, the job itself failed, DataNodes crashed, and/or elasticsearch was killed. &lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;2.2.1. Identifying the issue&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Both examples of wordcount, as well as all the phases of Nutch crawl seem to run without errors (in this latter case, I could still see some failed map and reduce tasks). However, the indexing step of Nutch failed almost always. Fortunately, I could just run the indexing step on an existing segment from a previous crawl, with:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$NUTCH_HOME/runtime/deploy/bin/nutch index /crawlOutput//crawldb -linkdb /crawlOutput//linkdb /crawlOutput//segments/20160623170331
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;where &lt;code&gt;crawlOutput&lt;/code&gt; is the folder in the dfs that held the segments of the Nutch crawl.&lt;/p&gt;
+
+&lt;p&gt;The stack traces I could see in the terminal where I launched the application, as well as in the ResourceManager web UI (or in the JobHistory Server) were not informative most of the times:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;Exit code: 1
+Stack trace: ExitCodeException exitCode=1:
+at org.apache.hadoop.util.Shell.runCommand(Shell.java:538)
+at org.apache.hadoop.util.Shell.run(Shell.java:455)
+at org.apache.hadoop.util.Shell$ShellCommandExecutor.execute(Shell.java:715)
+at org.apache.hadoop.yarn.server.nodemanager.DefaultContainerExecutor.launchContainer(DefaultContainerExecutor.java:212)
+at org.apache.hadoop.yarn.server.nodemanager.containermanager.launcher.ContainerLaunch.call(ContainerLaunch.java:302)
+at org.apache.hadoop.yarn.server.nodemanager.containermanager.launcher.ContainerLaunch.call(ContainerLaunch.java:82)
+at java.util.concurrent.FutureTask.run(FutureTask.java:262)
+at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+at java.lang.Thread.run(Thread.java:745)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;But, at some point I realized that, randomly, one of these things happened:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt; The elasticsearch node process was killed and I could see &lt;code&gt;org.elasticsearch.client.transport.NoNodeAvailableException: None of the configured nodes are available&lt;/code&gt;. If I tried to start it again, I could even see on the terminal: &lt;code&gt;java.lang.OutOfMemoryError&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt; &lt;code&gt;Error: unable to create new native thread Container killed by the ApplicationMaster. Container killed on request. Exit code is 143 Container exited with a non-zero exit code 143&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt; &amp;quot;Slave1&amp;quot; t2.micro instance disappeared from the &amp;quot;Nodes&amp;quot; page on the ResourceManager web UI (and running &lt;code&gt;jps&lt;/code&gt; on its terminal will show no sign of the NodeManager running).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Joining all this together made me quickly realize it was a memory issue.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;2.2.2. The issue&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;The affected nodes run out of memory, and the OS killed one of the most consuming processes, which sometimes was the elasticsearch process, and sometimes a Hadoop process [9]. &lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;2.2.3. The solution&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;I reached the solution in two steps. First, this StackOverflow post allowed me to reach this page [10] about Hadoop memory configuration. Doing a quick check on the default values for properties such as &lt;code&gt;yarn.nodemanager.resource.memory-mb&lt;/code&gt; [11] made me realize that they were unsuitable for a t2.micro instance (the default value of that property, which indicates the amount of physical memory that can be allocated for containers, was set to 8GB...). Thus, I changed my values according to [10].&lt;/p&gt;
+
+&lt;p&gt;This was not enough, however. Now the tasks were never allocated to any node and the jobs were never completed. It turns out there was also a need to restrict the amount of memory of the MR AppMaster containers [12], thus, accordingly, I set appropriate values for &lt;code&gt;yarn.app.mapreduce.am.resource.mb&lt;/code&gt; and &lt;code&gt;yarn.app.mapreduce.am.command-opts&lt;/code&gt; [13]. And this last fix allowed me to run all tasks without errors.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;2.2.4. Still to do&lt;/strong&gt;
+I believe that there would be more properties to tweak in order to achieve a higher performance. For example, I set &lt;code&gt;yarn.scheduler.minimum-allocation-mb&lt;/code&gt; to the same value of &lt;code&gt;yarn.nodemanager.resource.memory-mb&lt;/code&gt;, which means that only one container is allowed on a worker node, reserving all the available memory (even if the task does not require such amount of memory.). This allows me to be on the safe side regarding memory limits, but for low memory tasks, is results in under-utilization of resources.&lt;/p&gt;
+
+&lt;h1&gt;3. Minor discussions.&lt;/h1&gt;
+
+&lt;p&gt;The following comments are related to the respective steps of the mini-guide on section 1.&lt;/p&gt;
+
+&lt;p&gt;1- We can only spin up 3 t2.micro instances since the minimal amount of disk that can be set is 8GB, but more than 30GB falls out of the free tier [2]. I chose Amazon Linux AMI thinking that it may already contain certain prerequisites (Java SDK for example). In a production environment, different considerations may apply.&lt;/p&gt;
+
+&lt;p&gt;2- In a production environment, security rules should be as restrictive as possible.&lt;/p&gt;
+
+&lt;p&gt;7- I chose Nutch 1.x over 2.x since I do not need the added features of 2.x and it seems to be harder to configure. We cannot use the binaries here, because we want it to run on top of our existing Hadoop cluster, and thus, the config files of our Hadoop installation will take part on the compilation process of Nutch. &lt;/p&gt;
+
+&lt;p&gt;13- Unfortunately, Amazon Elasticsearch Service [15] cannot be used, and we must install and configure Elasticsearch by ourselves. The reason behind this is that such service only supports port 80 (the REST API to elasticsearch), whereas the elasticsearch plugin for Nutch uses the &amp;quot;Transport Client&amp;quot; which needs port 9300 (by default) [16].&lt;/p&gt;
+
+&lt;p&gt;14- For some unknown reason, the &amp;quot;automatic cluster discovery&amp;quot; of elasticsearch did not work for slave1 to automatically join master. Forcing unicast discovery did the trick.&lt;/p&gt;
+
+&lt;h1&gt;4. References&lt;/h1&gt;
+
+&lt;div&gt;
+[1] &lt;a href=http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EC2_GetStarted.html&gt;http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EC2_GetStarted.html&lt;/a&gt;&lt;br&gt;
+[2] &lt;a href=https://aws.amazon.com/es/free&gt;https://aws.amazon.com/es/free&lt;/a&gt;&lt;br&gt;
+[3] &lt;a href=http://www.apache.org/dyn/closer.cgi/hadoop/common/hadoop-2.6.4/hadoop-2.6.4.tar.gz&gt;http://www.apache.org/dyn/closer.cgi/hadoop/common/hadoop-2.6.4/hadoop-2.6.4.tar.gz&lt;/a&gt;&lt;br&gt;
+[4] &lt;a href=https://gist.github.com/Mario-LopezTelecom/84a191bf76550ec1846d34b8e6d53595&gt;https://gist.github.com/Mario-LopezTelecom/84a191bf76550ec1846d34b8e6d53595&lt;/a&gt;&lt;br&gt;
+[5] &lt;a href=http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/ClusterSetup.html&gt;http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/ClusterSetup.html&lt;/a&gt;&lt;br&gt;
+[6] &lt;a href=http://www.allprogrammingtutorials.com/tutorials/setting-up-hadoop-2-6-0-cluster.php&gt;http://www.allprogrammingtutorials.com/tutorials/setting-up-hadoop-2-6-0-cluster.php&lt;/a&gt;&lt;br&gt;  
+[7] &lt;a href=http://arturmkrtchyan.com/how-to-setup-multi-node-hadoop-2-yarn-cluster&gt;http://arturmkrtchyan.com/how-to-setup-multi-node-hadoop-2-yarn-cluster&lt;/a&gt;&lt;br&gt;  
+[8] &lt;a href=http://stackoverflow.com/questions/29600370/hadoop-2-x-on-amazon-ec2-t2-micro&gt;http://stackoverflow.com/questions/29600370/hadoop-2-x-on-amazon-ec2-t2-micro&lt;/a&gt;&lt;br&gt;  
+[9] &lt;a href=http://stackoverflow.com/questions/29001702/why-yarn-java-heap-space-memory-error&gt;http://stackoverflow.com/questions/29001702/why-yarn-java-heap-space-memory-error&lt;/a&gt;&lt;br&gt;  
+[10] &lt;a href=http://hortonworks.com/blog/how-to-plan-and-configure-yarn-in-hdp-2-0/&gt;http://hortonworks.com/blog/how-to-plan-and-configure-yarn-in-hdp-2-0&lt;/a&gt;&lt;br&gt;  
+[11] &lt;a href=http://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-common/yarn-default.xml&gt;http://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-common/yarn-default.xml&lt;/a&gt;&lt;br&gt;  
+[12] &lt;a href=http://stackoverflow.com/questions/34467308/mapreduce-job-hangs-waiting-for-am-container-to-be-allocated&gt;http://stackoverflow.com/questions/34467308/mapreduce-job-hangs-waiting-for-am-container-to-be-allocated&lt;/a&gt;&lt;br&gt;  
+[13] &lt;a href=https://gist.github.com/Mario-LopezTelecom/84a191bf76550ec1846d34b8e6d53595#file-mapred-site-xml-L41&gt;https://gist.github.com/Mario-LopezTelecom/84a191bf76550ec1846d34b8e6d53595#file-mapred-site-xml-L41&lt;/a&gt;&lt;br&gt; 
+[14] &lt;a href=http://www.apache.org/dyn/closer.lua/nutch/1.12/apache-nutch-1.12-src.tar.gz&gt;http://www.apache.org/dyn/closer.lua/nutch/1.12/apache-nutch-1.12-src.tar.gz&lt;/a&gt;&lt;br&gt;
+[15] &lt;a href=https://aws.amazon.com/es/elasticsearch-service/&gt;https://aws.amazon.com/es/elasticsearch-service&lt;/a&gt;&lt;br&gt;
+[16] &lt;a href=https://forums.aws.amazon.com/thread.jspa?messageID=681938&gt;https://forums.aws.amazon.com/thread.jspa?messageID=681938&lt;/a&gt;&lt;br&gt;
+[17] &lt;a href=https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-1.4.1.tar.gz&gt;https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-1.4.1.tar.gz&lt;/a&gt;&lt;br&gt;
+[18] &lt;a href=https://www.elastic.co/guide/en/elasticsearch/reference/1.4/_create_an_index.html&gt;https://www.elastic.co/guide/en/elasticsearch/reference/1.4/_create_an_index.html&lt;/a&gt;&lt;br&gt;
+[19] &lt;a href=https://www.mind-it.info/2013/09/26/integrating-nutch-1-7-elasticsearch/&gt;https://www.mind-it.info/2013/09/26/integrating-nutch-1-7-elasticsearch&lt;/a&gt;&lt;br&gt;
+&lt;/div&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Acho, ¿qué has estado haciendo estos últimos tres años?</title>
