@@ -4,7 +4,7 @@
  <title>Dr. Mario</title>
  <link href="/atom.xml" rel="self"/>
  <link href="/"/>
- <updated>2016-06-27T01:30:38+00:00</updated>
+ <updated>2016-07-12T17:11:58+00:00</updated>
  <id></id>
  <author>
    <name>Mario López Martínez</name>
@@ -14,9 +14,9 @@
  
  <entry>
    <title>Nutch, HDFS, and Elasticsearch on AWS t2.micro instances (Free Tier)</title>
-   <link href="/2016/07/26/nutch-hdfs-elasticsearch-on-t2micro/"/>
-   <updated>2016-07-26T00:00:00+00:00</updated>
-   <id>/2016/07/26/nutch-hdfs-elasticsearch-on-t2micro</id>
+   <link href="/2016/06/26/nutch-hdfs-elasticsearch-on-t2micro/"/>
+   <updated>2016-06-26T00:00:00+00:00</updated>
+   <id>/2016/06/26/nutch-hdfs-elasticsearch-on-t2micro</id>
    <content type="html">&lt;p&gt;As an exercise I committed to see how much I could accomplish of the following task definition: &lt;/p&gt;
 
 &lt;blockquote&gt;
@@ -295,9 +295,9 @@ I believe that there would be more properties to tweak in order to achieve a hig
 
 &lt;p&gt;Porque me pegué el hostión del siglo &lt;a href=&quot;https://www.youtube.com/watch?v=nY0SxfCK4Jo&quot;&gt; VÍDEO &lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;Hasta llegar al doctorado, prometo que era el típico motivado que pensaba que cualquiera puede conseguir lo que quiera, siempre que lo quiera lo suficiente. Que todo era una cuestión de tiempo y motivación. Esto todavía lo pienso, sólo que ahora tengo súper presente que el tiempo no es infinito y la motivación aún menos.&amp;lt;&lt;/p&gt;
+&lt;p&gt;Hasta llegar al doctorado, prometo que era el típico motivado que pensaba que cualquiera puede conseguir lo que quiera, siempre que lo quiera lo suficiente. Que todo era una cuestión de tiempo y motivación. Esto todavía lo pienso, sólo que ahora tengo súper presente que el tiempo no es infinito y la motivación aún menos.&lt;/p&gt;
 
-&lt;p&gt;Reconozco que iba hiper-confiado porque siempre he sido muy buen estudiante, con lo que la hostia ha sido doble. Dice Matt Might en su &lt;a href=&quot;http://matt.might.net/articles/successful-phd-students/&quot; rel=&quot;nofollow&quot; data-href=&quot;http://matt.might.net/articles/successful-phd-students/&quot;&gt;blog&lt;/a&gt;: “If you have an ego problem, Ph.D. school will fix it. With a vengeance”. Entonces ni se me pasó por la cabeza lo que supone resolver problemas no acotado. El requisito para publicar un trabajo, y finalmente depositar tu tesis doctoral, es que hagas una contribución original a tu campo, algo que no haya planteado antes nadie y que funcione. Tampoco tenía ni idea de que la tasa de abandono fuera tan bestia (&lt;a href=&quot;http://www.ugr.es/~aepc/articulo/8.pdf&quot; rel=&quot;nofollow&quot; data-href=&quot;http://www.ugr.es/~aepc/articulo/8.pdf&quot;&gt;del 50% entre los que consiguen mi beca&lt;/a&gt;). Otra cosa que tampoco piensas es que, obviamente, quienes se deciden por estudios doctorales (y contra los que pasas a competir) son, necesariamente, buenos estudiantes también.&lt;/p&gt;
+&lt;p&gt;Reconozco que iba hiper-confiado porque siempre he sido muy buen estudiante, con lo que la hostia ha sido doble. Dice Matt Might en su &lt;a href=&quot;http://matt.might.net/articles/successful-phd-students/&quot; rel=&quot;nofollow&quot; data-href=&quot;http://matt.might.net/articles/successful-phd-students/&quot;&gt;blog&lt;/a&gt;: “If you have an ego problem, Ph.D. school will fix it. With a vengeance”. Entonces ni se me pasó por la cabeza lo que supone resolver problemas no acotados. El requisito para publicar un trabajo, y finalmente depositar tu tesis doctoral, es que hagas una contribución original a tu campo, algo que no haya planteado antes nadie y que funcione. Tampoco tenía ni idea de que la tasa de abandono fuera tan bestia (&lt;a href=&quot;http://www.ugr.es/~aepc/articulo/8.pdf&quot; rel=&quot;nofollow&quot; data-href=&quot;http://www.ugr.es/~aepc/articulo/8.pdf&quot;&gt;del 50% entre los que consiguen mi beca&lt;/a&gt;). Otra cosa que tampoco piensas es que, obviamente, quienes se deciden por estudios doctorales (y contra los que pasas a competir) son, necesariamente, buenos estudiantes también.&lt;/p&gt;
 
 &lt;h3&gt;Vaya panorama, amiga. Cuéntame algo bonico.&lt;/h3&gt;
 
